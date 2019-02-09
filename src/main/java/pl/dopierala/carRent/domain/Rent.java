@@ -7,9 +7,9 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class Borrow {
+public class Rent {
     private Employee employee;
-    private LocalDate borrowDate;
+    private LocalDate rentDate;
     private Reservation reservation;
-    private String comments;
+    private String additionalInfo;
 }

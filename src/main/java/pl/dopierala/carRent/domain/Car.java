@@ -17,10 +17,4 @@ public class Car {
     private CarStatusEnum statusEnum;
     private double costPerDay;
     private List<Department> departmentList;
-
-    public void a(){
-        CarTypesEnum b;
-        b=CarTypesEnum.SEDAN;
-    }
-
 }
