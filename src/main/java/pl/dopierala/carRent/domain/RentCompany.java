@@ -33,6 +33,6 @@ public class RentCompany {
     }
 
     public boolean removeDepartment(String addressToDelete) {
-        return this.departmentList.removeIf(c->c.getAddress().equals(addressToDelete));
+        return this.departmentList.removeIf(c->c.getAddress().equalsIgnoreCase(addressToDelete));
     }
 }

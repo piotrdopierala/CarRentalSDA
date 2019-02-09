@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@ToString
 public class Department {
     private String address;
     private List<Employee> employeeList;
@@ -21,6 +22,7 @@ public class Department {
         this.carList = new ArrayList<>();
     }
 
-
-
+    public void addEmployee(Employee emp){
+        this.employeeList.add(emp);
+    }
 }

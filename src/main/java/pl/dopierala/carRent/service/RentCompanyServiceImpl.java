@@ -1,6 +1,7 @@
 package pl.dopierala.carRent.service;
 
 import pl.dopierala.carRent.domain.Department;
+import pl.dopierala.carRent.domain.Employee;
 import pl.dopierala.carRent.domain.RentCompany;
 
 public class RentCompanyServiceImpl implements RentCompanyService{
@@ -20,5 +21,10 @@ public class RentCompanyServiceImpl implements RentCompanyService{
     @Override
     public boolean removeDepartment(RentCompany company, String addressToDelete) {
         return company.removeDepartment(addressToDelete);
+    }
+
+    @Override
+    public void addEmployeeToDepartment(Employee emp) {
+        emp.getDep().addEmployee(emp);
     }
 }
