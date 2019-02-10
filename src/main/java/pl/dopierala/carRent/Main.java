@@ -21,7 +21,6 @@ import java.util.stream.IntStream;
 public class Main {
     private final static Scanner SCN = new Scanner(System.in);
     private final static RentCompanyService rentCompanyService = new RentCompanyServiceImpl();
-    private static RentCompany company;
     private static  SessionFactory sessionFactory;
     public static List<Client> clients = new ArrayList<>();
 
@@ -61,7 +60,7 @@ public class Main {
                 SCN.next();
             }
             int choice = SCN.nextInt();
-
+            RentCompany company;
             switch (choice) {
                 case 1:
                     System.out.println("Wprowadz nazwę:");
@@ -74,6 +73,7 @@ public class Main {
                     deptAddDelLoop();
                     break;
                 case 3:
+                    company = rentCompanyService.getCompany();
                     System.out.println(company);
                     break;
                 case 4:
@@ -102,7 +102,7 @@ public class Main {
         System.out.println("Enter model:");
         newCar.setModel(SCN.nextLine());
         System.out.println("Choose department for new employee:");
-        List<Department> departmentList = company.getDepartmentList();
+        List<Department> departmentList = rentCompanyService.getDepartmentsList();
         printDepartments();
         while (!SCN.hasNextInt()) {
             System.out.println("Wprowadź cyfrę!");
@@ -144,7 +144,7 @@ public class Main {
         System.out.println("Enter last name:");
         emp.setLastName(SCN.nextLine());
         System.out.println("Choose department for new employee:");
-        List<Department> departmentList = company.getDepartmentList();
+        List<Department> departmentList = rentCompanyService.getDepartmentsList();
         printDepartments();
         while (!SCN.hasNextInt()) {
             System.out.println("Wprowadź cyfrę!");
@@ -163,7 +163,7 @@ public class Main {
     }
 
     private static void deptAddDelLoop() throws IOException, InterruptedException {
-
+        RentCompany company = rentCompanyService.getCompany();
         if (company == null) {
             System.out.println("First, create company.");
             return;
@@ -177,14 +177,14 @@ public class Main {
                 SCN.next();
             }
             int choice = SCN.nextInt();
-
+            ;
             switch (choice) {
                 case 1:
                     System.out.println("NEW Department");
                     System.out.println("Enter address:");
                     SCN.nextLine();
                     String newCompanyAddress = SCN.nextLine();
-                    rentCompanyService.addDepartmentToCompany(company, newCompanyAddress);
+                    rentCompanyService.addDepartmentToCompany(newCompanyAddress);
                     System.out.println(company);
                     break;
                 case 2:
@@ -193,7 +193,7 @@ public class Main {
                     System.out.println("Enter address to DELETE:");
                     SCN.nextLine();
                     String delCompanyAddress = SCN.nextLine();
-                    boolean delResult = rentCompanyService.removeDepartment(company, delCompanyAddress);
+                    boolean delResult = rentCompanyService.removeDepartment(delCompanyAddress);
                     if (delResult) {
                         System.out.println("Department successfully deleted.");
                     } else {
@@ -213,7 +213,7 @@ public class Main {
     private static void printDepartments() {
         System.out.println("List od departments:");
         AtomicInteger no = new AtomicInteger(1);
-        company.getDepartmentList().stream().map(d -> no.getAndIncrement() + " addres:" + d.getAddress()).forEach(System.out::println);
+        rentCompanyService.getDepartmentsList().stream().map(d -> no.getAndIncrement() + " addres:" + d.getAddress()).forEach(System.out::println);
     }
 
     private static void printMenu() throws IOException, InterruptedException {

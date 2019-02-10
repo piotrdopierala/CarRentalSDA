@@ -5,25 +5,29 @@ import pl.dopierala.carRent.domain.Department;
 import pl.dopierala.carRent.domain.Employee;
 import pl.dopierala.carRent.domain.RentCompany;
 
+import java.util.List;
 import java.util.Optional;
 
 public class RentCompanyServiceImpl implements RentCompanyService {
 
+    private RentCompany company;
+
     @Override
     public RentCompany createNewCompany(String name, String website, String address, String owner, String logo) {
-        RentCompany rentCompany =
+        RentCompany newRentCompany =
                 new RentCompany(name, website, address, owner, logo);
-        return rentCompany;
+        this.company = newRentCompany;
+        return newRentCompany;
     }
 
     @Override
-    public void addDepartmentToCompany(RentCompany company, String depAdress) {
-        company.addDepartment(new Department(depAdress));
+    public void addDepartmentToCompany(String depAdress) {
+        this.company.addDepartment(new Department(depAdress));
     }
 
     @Override
-    public boolean removeDepartment(RentCompany company, String addressToDelete) {
-        return company.removeDepartment(addressToDelete);
+    public boolean removeDepartment(String addressToDelete) {
+        return this.company.removeDepartment(addressToDelete);
     }
 
     @Override
@@ -37,6 +41,16 @@ public class RentCompanyServiceImpl implements RentCompanyService {
     }
 
     @Override
+    public List<Department> getDepartmentsList() {
+        return this.company.getDepartmentList();
+    }
+
+    @Override
+    public RentCompany getCompany() {
+        return this.company;
+    }
+
+
     public Optional<Department> findDepartmentByAddress(RentCompany company, String departmentAddress) {
         Optional<Department> department = company.getDepartmentList().stream().filter(dep -> dep.getAddress().equalsIgnoreCase(departmentAddress)).findFirst();
         return department;
