@@ -22,7 +22,6 @@ public class Main {
     private final static Scanner SCN = new Scanner(System.in);
     private final static RentCompanyService rentCompanyService = new RentCompanyServiceImpl();
     private static  SessionFactory sessionFactory;
-    public static List<Client> clients = new ArrayList<>();
 
     public static void main(String[] args) throws IOException, InterruptedException {
         setUpDB();
@@ -131,7 +130,7 @@ public class Main {
         client.setFirstName(SCN.nextLine());
         System.out.println("Enter last name:");
         client.setLastName(SCN.nextLine());
-        clients.add(client);
+        rentCompanyService.addClient(client);
         return client;
     }
 

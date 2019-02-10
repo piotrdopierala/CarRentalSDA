@@ -1,9 +1,6 @@
 package pl.dopierala.carRent.service;
 
-import pl.dopierala.carRent.domain.Car;
-import pl.dopierala.carRent.domain.Department;
-import pl.dopierala.carRent.domain.Employee;
-import pl.dopierala.carRent.domain.RentCompany;
+import pl.dopierala.carRent.domain.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +30,11 @@ public class RentCompanyServiceImpl implements RentCompanyService {
     @Override
     public void addEmployeeToDepartment(Employee emp) {
         emp.getDep().addEmployee(emp);
+    }
+
+    @Override
+    public void addClient(Client client) {
+        this.company.getClients().add(client);
     }
 
     @Override

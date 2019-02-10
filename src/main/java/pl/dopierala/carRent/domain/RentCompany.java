@@ -19,6 +19,7 @@ public class RentCompany {
     private String owner;
     private String logo;
     private List<Department> departmentList;
+    private List<Client> clients;
 
 
     public RentCompany(String name, String website, String address, String owner, String logo) {
@@ -28,6 +29,7 @@ public class RentCompany {
         this.owner = owner;
         this.logo = logo;
         this.departmentList = new ArrayList<>();
+        this.clients = new ArrayList<>();
     }
 
     public void addDepartment(Department dep){
