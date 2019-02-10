@@ -4,13 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @ToString
+@Entity
 public class Department {
     private String address;
     private List<Employee> employeeList;

@@ -1,8 +1,13 @@
 package pl.dopierala.carRent;
 
-import pl.dopierala.carRent.domain.Department;
-import pl.dopierala.carRent.domain.Employee;
-import pl.dopierala.carRent.domain.RentCompany;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import pl.dopierala.carRent.domain.*;
 import pl.dopierala.carRent.service.RentCompanyService;
 import pl.dopierala.carRent.service.RentCompanyServiceImpl;
 
@@ -17,10 +22,33 @@ public class Main {
     private final static Scanner SCN = new Scanner(System.in);
     private final static RentCompanyService rentCompanyService = new RentCompanyServiceImpl();
     private static RentCompany company;
+    private static  SessionFactory sessionFactory;
+    public static List<Client> clients = new ArrayList<>();
 
     public static void main(String[] args) throws IOException, InterruptedException {
-
+        setUpDB();
         mainMenuLoop();
+        closeDB();
+    }
+
+    private static void setUpDB() {
+        // A SessionFactory is set up once for an application!
+        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+                .configure() // configures settings from hibernate.cfg.xml
+                .build();
+        try {
+            sessionFactory = new MetadataSources( registry ).buildMetadata().buildSessionFactory();
+        }
+        catch (Exception e) {
+            // The registry would be destroyed by the SessionFactory, but we had trouble building the SessionFactory
+            // so destroy it manually.
+            StandardServiceRegistryBuilder.destroy( registry );
+            throw  e;
+        }
+    }
+
+    private static void closeDB(){
+        sessionFactory.close();
     }
 
     private static void mainMenuLoop() throws IOException, InterruptedException {
@@ -49,24 +77,13 @@ public class Main {
                     System.out.println(company);
                     break;
                 case 4:
-                    System.out.println("Add employee");
-                    Employee emp = new Employee();
-                    System.out.println("Enter first name:");
-                    SCN.nextLine();
-                    emp.setFirstName(SCN.nextLine());
-                    System.out.println("Enter last name:");
-                    emp.setLastName(SCN.nextLine());
-                    System.out.println("Choose department for new employee:");
-                    List<Department> departmentList = company.getDepartmentList();
-                    IntStream.range(0, departmentList.size()).mapToObj(idx -> Integer.valueOf(idx + 1) + ". " + departmentList.get(idx).getAddress()).forEach(System.out::println);
-                    while (!SCN.hasNextInt()) {
-                        System.out.println("Wprowadź cyfrę!");
-                        SCN.next();
-                    }
-                    int depId = SCN.nextInt();
-                    emp.setDep(departmentList.get(depId - 1));
-                    rentCompanyService.addEmployeeToDepartment(emp);
-                    System.out.println(departmentList.get(depId - 1));
+                    createEmployee();
+                    break;
+                case 5:
+                    addClient();
+                    break;
+                case 6:
+                    addCar();
                     break;
                 case 0:
                     break mainMenuLoop;
@@ -74,6 +91,75 @@ public class Main {
                     System.out.println("Choose correct option.");
             }
         }
+    }
+
+    private static void addCar() {
+        System.out.println("Add Car");
+        Car newCar = new Car();
+        System.out.println("Enter brand:");
+        SCN.nextLine();
+        newCar.setBrand(SCN.nextLine());
+        System.out.println("Enter model:");
+        newCar.setModel(SCN.nextLine());
+        System.out.println("Choose department for new employee:");
+        List<Department> departmentList = company.getDepartmentList();
+        printDepartments();
+        while (!SCN.hasNextInt()) {
+            System.out.println("Wprowadź cyfrę!");
+            SCN.next();
+        }
+        int depId = SCN.nextInt();
+        if(depId<1 || depId>departmentList.size()){
+            System.out.println("Given department no not found. Enter correct one.");
+        }
+        rentCompanyService.addCarToDepartment(newCar,departmentList.get(depId - 1));
+        System.out.println(departmentList.get(depId - 1));
+
+        Session currentSession = sessionFactory.getCurrentSession();
+        Transaction transaction = currentSession.getTransaction();
+        transaction.begin();
+        currentSession.persist(newCar);
+        transaction.commit();
+
+    }
+
+    private static Client addClient() {
+        System.out.println("Add client");
+        Client client = new Client();
+        System.out.println("Enter first name:");
+        SCN.nextLine();
+        client.setFirstName(SCN.nextLine());
+        System.out.println("Enter last name:");
+        client.setLastName(SCN.nextLine());
+        clients.add(client);
+        return client;
+    }
+
+    private static Employee createEmployee() {
+        System.out.println("Add employee");
+        Employee emp = new Employee();
+        System.out.println("Enter first name:");
+        SCN.nextLine();
+        emp.setFirstName(SCN.nextLine());
+        System.out.println("Enter last name:");
+        emp.setLastName(SCN.nextLine());
+        System.out.println("Choose department for new employee:");
+        List<Department> departmentList = company.getDepartmentList();
+        printDepartments();
+        while (!SCN.hasNextInt()) {
+            System.out.println("Wprowadź cyfrę!");
+            SCN.next();
+        }
+        int depId = SCN.nextInt();
+        if(depId<1 || depId>departmentList.size()){
+            System.out.println("Given department no not found. Enter correct one.");
+            return new Employee();
+        }
+
+        emp.setDep(departmentList.get(depId - 1));
+        rentCompanyService.addEmployeeToDepartment(emp);
+        System.out.println(departmentList.get(depId - 1));
+        return emp;
     }
 
     private static void deptAddDelLoop() throws IOException, InterruptedException {
@@ -137,6 +223,8 @@ public class Main {
         System.out.println("2. Add/Delete department");
         System.out.println("3. Display company with departments");
         System.out.println("4. Add employee");
+        System.out.println("5. Add client");
+        System.out.println("6. Add car");
         System.out.println("0. EXIT");
         System.out.println("Your choice:");
     }

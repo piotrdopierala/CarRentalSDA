@@ -4,12 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
+@Entity
 public class RentCompany {
     private String name;
     private String website;
