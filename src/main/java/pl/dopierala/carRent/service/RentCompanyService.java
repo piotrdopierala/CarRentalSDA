@@ -17,4 +17,7 @@ public interface RentCompanyService {
     void addClient(Client client);
 
     void addCarToDepartment(Car car, Department dep);
+
+    int initializeRepository();
+    int closeRepository();
 }

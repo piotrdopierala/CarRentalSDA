@@ -22,5 +22,5 @@ public class Car {
     private CarStatusEnum statusEnum;
     private double costPerDay;
     @Transient
-    private List<Department> departmentList;
+    private Department departmentList;
 }

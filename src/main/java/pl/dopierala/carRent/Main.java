@@ -1,52 +1,26 @@
 package pl.dopierala.carRent;
 
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import pl.dopierala.carRent.domain.*;
 import pl.dopierala.carRent.service.RentCompanyService;
-import pl.dopierala.carRent.service.RentCompanyServiceImpl;
+import pl.dopierala.carRent.service.RentCompanyServiceImpl_Memory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
+
+// TODO cleanup main method, repeating "enter a digit" code.
+
 
 public class Main {
     private final static Scanner SCN = new Scanner(System.in);
-    private final static RentCompanyService rentCompanyService = new RentCompanyServiceImpl();
-    private static  SessionFactory sessionFactory;
+    private static RentCompanyService rentCompanyService;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        setUpDB();
+        rentCompanyService = new RentCompanyServiceImpl_Memory();
+        rentCompanyService.initializeRepository();
         mainMenuLoop();
-        closeDB();
-    }
-
-    private static void setUpDB() {
-        // A SessionFactory is set up once for an application!
-        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-                .configure() // configures settings from hibernate.cfg.xml
-                .build();
-        try {
-            sessionFactory = new MetadataSources( registry ).buildMetadata().buildSessionFactory();
-        }
-        catch (Exception e) {
-            // The registry would be destroyed by the SessionFactory, but we had trouble building the SessionFactory
-            // so destroy it manually.
-            StandardServiceRegistryBuilder.destroy( registry );
-            throw  e;
-        }
-    }
-
-    private static void closeDB(){
-        sessionFactory.close();
+        rentCompanyService.closeRepository();
     }
 
     private static void mainMenuLoop() throws IOException, InterruptedException {
@@ -55,14 +29,14 @@ public class Main {
         while (true) {
             printMenu();
             while (!SCN.hasNextInt()) {
-                System.out.println("Wprowadź cyfrę!");
+                System.out.println("Enter a digit!");
                 SCN.next();
             }
             int choice = SCN.nextInt();
             RentCompany company;
             switch (choice) {
                 case 1:
-                    System.out.println("Wprowadz nazwę:");
+                    System.out.println("Enter name:");
                     SCN.nextLine();
                     String inputName = SCN.nextLine();
                     company = rentCompanyService.createNewCompany(inputName, "www.ren.com", "ul. Glogowska 1", "Alexander Mistrz", "RRent");
@@ -104,7 +78,7 @@ public class Main {
         List<Department> departmentList = rentCompanyService.getDepartmentsList();
         printDepartments();
         while (!SCN.hasNextInt()) {
-            System.out.println("Wprowadź cyfrę!");
+            System.out.println("Enter a digit!");
             SCN.next();
         }
         int depId = SCN.nextInt();
@@ -113,13 +87,6 @@ public class Main {
         }
         rentCompanyService.addCarToDepartment(newCar,departmentList.get(depId - 1));
         System.out.println(departmentList.get(depId - 1));
-
-        Session currentSession = sessionFactory.getCurrentSession();
-        Transaction transaction = currentSession.getTransaction();
-        transaction.begin();
-        currentSession.persist(newCar);
-        transaction.commit();
-
     }
 
     private static Client addClient() {
@@ -146,7 +113,7 @@ public class Main {
         List<Department> departmentList = rentCompanyService.getDepartmentsList();
         printDepartments();
         while (!SCN.hasNextInt()) {
-            System.out.println("Wprowadź cyfrę!");
+            System.out.println("Enter a digit!");
             SCN.next();
         }
         int depId = SCN.nextInt();
@@ -172,7 +139,7 @@ public class Main {
         while (true) {
             printDepAddDel();
             while (!SCN.hasNextInt()) {
-                System.out.println("Wprowadź cyfrę!");
+                System.out.println("Enter a digit!");
                 SCN.next();
             }
             int choice = SCN.nextInt();
@@ -203,7 +170,7 @@ public class Main {
                 case 0:
                     break deptAddDelLoop;
                 default:
-                    System.out.println("Wybierz poprawną opcje");
+                    System.out.println("Choose correct option");
             }
         }
 

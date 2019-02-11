@@ -5,7 +5,7 @@ import pl.dopierala.carRent.domain.*;
 import java.util.List;
 import java.util.Optional;
 
-public class RentCompanyServiceImpl implements RentCompanyService {
+public class RentCompanyServiceImpl_Memory implements RentCompanyService {
 
     private RentCompany company;
 
@@ -40,6 +40,16 @@ public class RentCompanyServiceImpl implements RentCompanyService {
     @Override
     public void addCarToDepartment(Car car, Department dep) {
         dep.getCarList().add(car);
+    }
+
+    @Override
+    public int initializeRepository() {
+        return 0;
+    }
+
+    @Override
+    public int closeRepository() {
+        return 0;
     }
 
     @Override
