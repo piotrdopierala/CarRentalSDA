@@ -29,7 +29,7 @@ public class RentCompanyServiceImpl_Memory implements RentCompanyService {
 
     @Override
     public void addEmployeeToDepartment(Employee emp) {
-        emp.getDep().addEmployee(emp);
+        emp.getDepartment().addEmployee(emp);
     }
 
     @Override

@@ -21,6 +21,7 @@ public class Car {
     private int milage;
     private CarStatusEnum statusEnum;
     private double costPerDay;
-    @Transient
-    private Department departmentList;
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 }

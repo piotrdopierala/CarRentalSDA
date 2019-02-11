@@ -2,6 +2,7 @@ package pl.dopierala.carRent;
 
 import pl.dopierala.carRent.domain.*;
 import pl.dopierala.carRent.service.RentCompanyService;
+import pl.dopierala.carRent.service.RentCompanyServiceImpl_DB;
 import pl.dopierala.carRent.service.RentCompanyServiceImpl_Memory;
 
 import java.io.IOException;
@@ -17,7 +18,7 @@ public class Main {
     private static RentCompanyService rentCompanyService;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        rentCompanyService = new RentCompanyServiceImpl_Memory();
+        rentCompanyService = new RentCompanyServiceImpl_DB();
         rentCompanyService.initializeRepository();
         mainMenuLoop();
         rentCompanyService.closeRepository();
@@ -28,11 +29,7 @@ public class Main {
         mainMenuLoop:
         while (true) {
             printMenu();
-            while (!SCN.hasNextInt()) {
-                System.out.println("Enter a digit!");
-                SCN.next();
-            }
-            int choice = SCN.nextInt();
+            int choice = scanNumberFromInput();
             RentCompany company;
             switch (choice) {
                 case 1:
@@ -66,6 +63,14 @@ public class Main {
         }
     }
 
+    private static int scanNumberFromInput() {
+        while (!SCN.hasNextInt()) {
+            System.out.println("Enter a digit!");
+            SCN.next();
+        }
+        return SCN.nextInt();
+    }
+
     private static void addCar() {
         System.out.println("Add Car");
         Car newCar = new Car();
@@ -77,11 +82,7 @@ public class Main {
         System.out.println("Choose department for new employee:");
         List<Department> departmentList = rentCompanyService.getDepartmentsList();
         printDepartments();
-        while (!SCN.hasNextInt()) {
-            System.out.println("Enter a digit!");
-            SCN.next();
-        }
-        int depId = SCN.nextInt();
+        int depId = scanNumberFromInput();
         if(depId<1 || depId>departmentList.size()){
             System.out.println("Given department no not found. Enter correct one.");
         }
@@ -112,17 +113,13 @@ public class Main {
         System.out.println("Choose department for new employee:");
         List<Department> departmentList = rentCompanyService.getDepartmentsList();
         printDepartments();
-        while (!SCN.hasNextInt()) {
-            System.out.println("Enter a digit!");
-            SCN.next();
-        }
-        int depId = SCN.nextInt();
+        int depId = scanNumberFromInput();
         if(depId<1 || depId>departmentList.size()){
             System.out.println("Given department no not found. Enter correct one.");
             return new Employee();
         }
 
-        emp.setDep(departmentList.get(depId - 1));
+        emp.setDepartment(departmentList.get(depId - 1));
         rentCompanyService.addEmployeeToDepartment(emp);
         System.out.println(departmentList.get(depId - 1));
         return emp;
@@ -138,12 +135,7 @@ public class Main {
         deptAddDelLoop:
         while (true) {
             printDepAddDel();
-            while (!SCN.hasNextInt()) {
-                System.out.println("Enter a digit!");
-                SCN.next();
-            }
-            int choice = SCN.nextInt();
-            ;
+            int choice = scanNumberFromInput();
             switch (choice) {
                 case 1:
                     System.out.println("NEW Department");

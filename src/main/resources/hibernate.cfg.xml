@@ -26,6 +26,13 @@
         <property name="hibernate.current_session_context_class">thread</property>
 
         <mapping class="pl.dopierala.carRent.domain.Car" />
+        <mapping class="pl.dopierala.carRent.domain.Client" />
+        <mapping class="pl.dopierala.carRent.domain.Department" />
+        <mapping class="pl.dopierala.carRent.domain.Employee" />
+        <mapping class="pl.dopierala.carRent.domain.RentCar" />
+        <mapping class="pl.dopierala.carRent.domain.RentCompany" />
+        <mapping class="pl.dopierala.carRent.domain.Reservation" />
+        <mapping class="pl.dopierala.carRent.domain.ReturnCar" />
 
     </session-factory>
 </hibernate-configuration>
