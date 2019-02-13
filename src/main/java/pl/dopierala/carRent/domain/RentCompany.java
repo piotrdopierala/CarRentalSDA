@@ -4,10 +4,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Cascade;
+
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.hibernate.annotations.CascadeType.*;
 
 @Getter
 @Setter
@@ -23,9 +27,11 @@ public class RentCompany {
     private String address;
     private String owner;
     private String logo;
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
+    @Cascade(value= ALL)
     private List<Department> departmentList;
     @OneToMany(mappedBy = "company")
+    @Cascade(value=ALL)
     private List<Client> clients;
 
 
@@ -40,6 +46,7 @@ public class RentCompany {
     }
 
     public void addDepartment(Department dep){
+        dep.setCompany(this);
         this.departmentList.add(dep);
     }
 

@@ -6,9 +6,9 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.query.Query;
 import pl.dopierala.carRent.domain.*;
 
-import java.beans.Transient;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,7 +27,7 @@ public class RentCompanyServiceImpl_DB implements RentCompanyService {
         currentSession.persist(company);
         transaction.commit();
 
-        this.company=company;
+        this.company = company;
         return company;
     }
 
@@ -38,8 +38,10 @@ public class RentCompanyServiceImpl_DB implements RentCompanyService {
             Session session = sessionFactory.getCurrentSession();
             Transaction transaction = session.getTransaction();
             transaction.begin();
-            Integer lastCompanyId = session.createQuery("SELECT MAX(id) FROM RentCompany",Integer.class).getSingleResult();
-            company = session.get(RentCompany.class, 1);
+            Integer lastCompanyId = session.createQuery("SELECT MAX(id) FROM RentCompany", Integer.class).getSingleResult();
+            Query query = session.createQuery("FROM RentCompany cy LEFT JOIN FETCH cy.clients cs WHERE cy.id=:id");
+            query.setParameter("id", lastCompanyId);
+            company = (RentCompany) query.getSingleResult();
             transaction.commit();
         }
 
@@ -48,17 +50,29 @@ public class RentCompanyServiceImpl_DB implements RentCompanyService {
 
     @Override
     public void addDepartmentToCompany(String depAdress) {
-
+        Department newDep = new Department(depAdress);
+        this.company.addDepartment(newDep);
+        updateCompany();
     }
 
     @Override
     public boolean removeDepartment(String address) {
+        company.removeDepartment(address);
+        updateCompany();
         return false;
+    }
+
+    private void updateCompany() {
+        Session session = sessionFactory.getCurrentSession();
+        Transaction transaction = session.getTransaction();
+        transaction.begin();
+        session.update(company);
+        transaction.commit();
     }
 
     @Override
     public List<Department> getDepartmentsList() {
-        return null;
+        return company.getDepartmentList();
     }
 
     @Override

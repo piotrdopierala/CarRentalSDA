@@ -3,7 +3,6 @@ package pl.dopierala.carRent;
 import pl.dopierala.carRent.domain.*;
 import pl.dopierala.carRent.service.RentCompanyService;
 import pl.dopierala.carRent.service.RentCompanyServiceImpl_DB;
-import pl.dopierala.carRent.service.RentCompanyServiceImpl_Memory;
 
 import java.io.IOException;
 import java.util.List;
