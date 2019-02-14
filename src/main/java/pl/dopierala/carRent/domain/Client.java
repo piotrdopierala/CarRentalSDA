@@ -20,4 +20,15 @@ public class Client {
     @JoinColumn(name="company_id")
     private RentCompany company;
 
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", company=" + company.getName() +
+                '}';
+    }
 }

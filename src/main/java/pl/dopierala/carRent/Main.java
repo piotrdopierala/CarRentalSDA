@@ -164,7 +164,6 @@ public class Main {
                     System.out.println("Choose correct option");
             }
         }
-
     }
 
     private static void printDepartments() {

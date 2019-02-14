@@ -34,7 +34,7 @@ public class RentCompanyServiceImpl_Memory implements RentCompanyService {
 
     @Override
     public void addClient(Client client) {
-        this.company.getClients().add(client);
+        this.company.addClient(client);
     }
 
     @Override

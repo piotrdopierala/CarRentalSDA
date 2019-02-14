@@ -48,9 +48,14 @@ public class RentCompany {
     public void addDepartment(Department dep){
         dep.setCompany(this);
         this.departmentList.add(dep);
+
     }
 
     public boolean removeDepartment(String addressToDelete) {
         return this.departmentList.removeIf(c->c.getAddress().equalsIgnoreCase(addressToDelete));
+    }
+
+    public void addClient(Client client){
+        this.clients.add(client);
     }
 }

@@ -77,12 +77,28 @@ public class RentCompanyServiceImpl_DB implements RentCompanyService {
 
     @Override
     public void addEmployeeToDepartment(Employee emp) {
+        Department department = emp.getDepartment();
+        department.addEmployee(emp);
+
+        Session currentSession = sessionFactory.getCurrentSession();
+        Transaction transaction = currentSession.getTransaction();
+        transaction.begin();
+        currentSession.persist(emp);
+        transaction.commit();
 
     }
 
     @Override
     public void addClient(Client client) {
 
+        client.setCompany(this.company);
+        this.company.addClient(client);
+
+        Session currentSession = sessionFactory.getCurrentSession();
+        Transaction transaction = currentSession.getTransaction();
+        transaction.begin();
+        currentSession.persist(client);
+        transaction.commit();
     }
 
     @Override
